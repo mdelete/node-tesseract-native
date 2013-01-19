@@ -6,13 +6,18 @@ C++ module for node providing OCR with tesseract and leptonica
 Prerequisites
 -------------
  * have linux
- * have node and node-waf installed
- * have leptonica libs and headers installed
- * have tesseract libs and headers installed
+ * have node and node-waf installed under /usr/local/node
+ * have leptonica libs and headers installed under /usr/local/lib
+ * have tesseract libs and headers installed under /usr/local/lib
 
+Supported Picture Formats
+-------------------------
+
+The module can handle every picture format leptonica can handle (see there), but as this module is likely to be used in an online service, pictures should be as small as possible. A 1.3MP Picture converted to B/W using adaptive threshold filtering, saved as PNG will be 50KB on average. This is were you want to go.
 
 Example server
 --------------
+
 The code below shows a fully functional server where you can POST pictures to. The response will contain the recognized plain text or be empty if nothing was recognized or something went wrong.
 
     var ocreio = require('./node-tesseract-native');
@@ -37,7 +42,7 @@ The code below shows a fully functional server where you can POST pictures to. T
             
             request.on('end', function() {
                 var buffer = Buffer.concat(bufferList, totalSize);
-                myOcr.ocr(buffer, 500, function(result) {
+                myOcr.ocr(buffer, function(result) {
                     response.writeHead(200, {'Content-Type': 'text/plain'});
                     response.end(result);
                 });
