@@ -150,5 +150,5 @@ extern "C" {
     OcrEio::Init(target);
   }
 
-  NODE_MODULE(iocr_eio, init);
+  NODE_MODULE(tesseract_native, init);
 }
