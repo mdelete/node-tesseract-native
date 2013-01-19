@@ -20,7 +20,7 @@ Example server
 
 The code below shows a fully functional server where you can POST pictures to. The response will contain the recognized plain text or be empty if nothing was recognized or something went wrong.
 
-    var ocreio = require('./node-tesseract-native');
+    var tesseract = require('./node-tesseract-native');
     var http = require('http');
     
     var server = http.createServer(function(request, response)
@@ -29,7 +29,7 @@ The code below shows a fully functional server where you can POST pictures to. T
         {
             var totalSize = 0;
             var bufferList = new Array();
-            var myOcr = new ocreio.OcrEio();
+            var myOcr = new tesseract.OcrEio();
             
             request.on('data', function(data) {
                 bufferList.push(data);
