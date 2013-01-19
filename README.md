@@ -20,7 +20,7 @@ Example server
 
 The code below shows a fully functional server where you can POST pictures to. The response will contain the recognized plain text or be empty if nothing was recognized or something went wrong.
 
-    var tesseract = require('./node-tesseract-native');
+    var tesseract = require('./tesseract-native');
     var http = require('http');
     
     var server = http.createServer(function(request, response)
