@@ -64,32 +64,58 @@ public:
   {
     HandleScope scope;
 
-    if (args.Length() != 2)
-        return ThrowException(Exception::TypeError(String::New("Expected 2 arguments"))); 
+    if (args.Length() < 2 || args.Length() > 3)
+      return ThrowException(Exception::TypeError(String::New("Expected 2 or 3 arguments"))); 
     
     if (!args[0]->ToObject()->GetConstructorName()->Equals(String::New("Buffer")))
-        return ThrowException(Exception::TypeError(String::New("Argument 0 must be an object of type Buffer")));
+      return ThrowException(Exception::TypeError(String::New("Argument 1 must be an object of type Buffer")));
     
-    Handle<Object> buf = args[0]->ToObject();
+    Handle<Object> buf = args[0]->ToObject();   
+    Local<Function> cb;
     
-    // TODO args[1] must be object (ex.: { timeout: 500, lang: "deu" }) or function; if object, args[2] must be provided and of type function
-    //if (!args[1]->IsNumber())
-    //    return ThrowException(Exception::TypeError(String::New("Argument 1 must be a number.")));
-    //int timeout = args[1]->ToInteger()->Value();
-    
-    if (!args[1]->IsFunction())
-        return ThrowException(Exception::TypeError(String::New("Argument 1 must be a function")));
+    STRING language("eng"); // default language, this is a tesseract string
+    unsigned timeout = 500; // default timeout
+
+    if(args.Length() == 2)
+    {
+      if (!args[1]->IsFunction())
+        return ThrowException(Exception::TypeError(String::New("Argument 2 must be a function")));
         
-    Local<Function> cb = Local<Function>::Cast(args[1]);
+      cb = Local<Function>::Cast(args[1]);
+    }
+    else if(args.Length() == 3)
+    {
+      if (!args[1]->IsObject())
+        return ThrowException(Exception::TypeError(String::New("Argument 2 must be an config object, e.g. { timeout:500, lang:\"eng\" }")));
+
+      Handle<Object> config = args[1]->ToObject();
+      
+      Local<Value> timeout_value = config->Get(String::New("timeout"));
+      if(timeout_value->IsNumber())
+        timeout = timeout_value->ToInteger()->Value();
+      
+      Local<Value> lang_value = config->Get(String::New("lang"));
+      if(lang_value->IsString())
+      {
+        String::AsciiValue str(lang_value);
+        if(str.length() == 3)
+          language = STRING(*str);
+      }
+
+      if (!args[2]->IsFunction())
+        return ThrowException(Exception::TypeError(String::New("Argument 3 must be a function")));
+
+      cb = Local<Function>::Cast(args[2]);
+    }
     
     OcrEio* oe = ObjectWrap::Unwrap<OcrEio>(args.This());
     oe->Ref();
     
     ocr_baton_t *baton = new ocr_baton_t();
     baton->oe = oe;
-    baton->timeout = (unsigned) 500;
+    baton->timeout = timeout;
     baton->textresult = "";
-    baton->language = "eng";
+    baton->language = language;
     baton->cb = Persistent<Function>::New(cb);
     baton->buf = Persistent<Object>::New(buf);
 
