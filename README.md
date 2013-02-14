@@ -52,3 +52,11 @@ The code below shows a fully functional server where you can POST pictures to. T
             request.connection.destroy();
         }
     }).listen(process.argv[2]);
+    
+The OCR function also accepts a config object as second and the callback as third parameter like this:
+
+    myOcr.ocr(buffer, { lang: deu, timeout:300 }, function(result) {
+        // do something
+    });
+    
+The supported parameters for now are **timeout**, which is the limit in milliseconds tesseract should try to detect text in the picture and **lang** can be any three-character code for a language you have **.traindata** installed in tesseract. **Warning: tesseract will segfault if you do not have the appropriate **.traineddata** installed!
