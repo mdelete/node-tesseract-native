@@ -131,9 +131,9 @@ public:
   {
     ocr_baton_t *baton = static_cast<ocr_baton_t *>(req->data);
     tesseract::TessBaseAPI api;
-    api.Init("/usr/local/share/tessdata/", baton->language.string(), tesseract::OEM_DEFAULT, NULL, 0, NULL, NULL, false);
+    int r = api.Init("/usr/local/share/tessdata/", baton->language.string(), tesseract::OEM_DEFAULT, NULL, 0, NULL, NULL, false);
     PIX* pix = pixReadMem((unsigned char*)Buffer::Data(baton->buf), Buffer::Length(baton->buf)); // leptonica function
-    if (pix && !api.ProcessPage(pix, 0, "", NULL, baton->timeout, &baton->textresult)) // textresult will be empty if error occured
+    if (r == 0 && pix && !api.ProcessPage(pix, 0, "", NULL, baton->timeout, &baton->textresult)) // textresult will be empty if error occured
     {
       fprintf(stderr, "*** error during tesseract processing ***\n");
     }
