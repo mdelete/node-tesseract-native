@@ -1,0 +1,27 @@
+{
+  "name" : "tesseract_native",
+  "description" : "C++ module for node providing OCR with tesseract and leptonica",
+  "version" : "v0.1.0",
+  "scripts" : {
+    "preinstall" : "node-waf configure && node-waf build",
+    "preuninstall" : "rm -rf build/*"
+  },
+  "main" : "build/Release/tesseract_native.node",
+  "homepage" : "https://github.com/mdelete/node-tesseract-native",
+  "author" : {
+    "name" : "Marc Delling"
+  },
+  "keywords": [
+    "tesseract",
+    "ocr",
+    "native"
+  ],
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/mdelete/node-tesseract-native.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}
