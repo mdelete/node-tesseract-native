@@ -53,6 +53,9 @@ The code below shows a fully functional server where you can POST pictures to. T
         }
     }).listen(process.argv[2]);
     
+Parameters
+----------
+    
 The OCR function also accepts a config object as second and the callback as third parameter like this:
 
     myOcr.ocr(buffer, { lang:"deu", timeout:300 }, function(result) {
