@@ -5,10 +5,10 @@ C++ module for node providing OCR with tesseract and leptonica
 
 Prerequisites
 -------------
- * have linux
- * have node and node-waf installed under /usr/local/node
- * have leptonica (~1.68) libs and headers installed under /usr/local/lib
- * have tesseract (~3.01) libs and headers installed under /usr/local/lib
+ * Have linux
+ * Have node and node-waf installed
+ * Have leptonica (~1.68) libs and headers installed
+ * Have tesseract (~3.01) libs and headers installed
 
 Build
 -----
