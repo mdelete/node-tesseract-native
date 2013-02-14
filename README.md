@@ -7,8 +7,8 @@ Prerequisites
 -------------
  * have linux
  * have node and node-waf installed under /usr/local/node
- * have leptonica libs and headers installed under /usr/local/lib
- * have tesseract libs and headers installed under /usr/local/lib
+ * have leptonica (~1.68) libs and headers installed under /usr/local/lib
+ * have tesseract (~3.01) libs and headers installed under /usr/local/lib
 
 Supported Picture Formats
 -------------------------
