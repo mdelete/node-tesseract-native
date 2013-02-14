@@ -10,10 +10,22 @@ Prerequisites
  * have leptonica (~1.68) libs and headers installed under /usr/local/lib
  * have tesseract (~3.01) libs and headers installed under /usr/local/lib
 
+Build
+-----
+
+    node-waf configure && node-waf build
+
 Supported Picture Formats
 -------------------------
 
 The module can handle every picture format leptonica can handle (see there), but as this module is likely to be used in an online service, pictures should be as small as possible. A 1.3MP Picture converted to B/W using adaptive threshold filtering, saved as PNG will be 50KB on average. This is were you want to go.
+
+Test your setup
+---------------
+
+You can test your setup using the provided *test.js* script on the command-line
+
+    node test.js some-picture-with-text-in-it.png
 
 Example server
 --------------
