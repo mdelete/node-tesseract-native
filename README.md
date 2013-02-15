@@ -79,4 +79,4 @@ The OCR function also accepts a config object as second and the callback as thir
         // do something
     });
     
-The first supported parameter is *timeout*, which is the limit in milliseconds tesseract should try to detect text in the picture, the second is *lang* which can be any three-character code for a language you have installed in tesseract.
+The first supported parameter is *timeout*, which is the limit in milliseconds tesseract should try to detect text in the picture, the second is *lang* which can be any three-character code for a language you have installed in tesseract (have a ???.tessdata file).
