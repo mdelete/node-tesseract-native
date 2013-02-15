@@ -14,6 +14,10 @@ Build
 -----
 
     node-waf configure && node-waf build
+    
+or
+
+    npm install tesseract_native
 
 Supported Picture Formats
 -------------------------
