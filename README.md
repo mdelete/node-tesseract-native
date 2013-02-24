@@ -8,7 +8,7 @@ Prerequisites
  * Have linux
  * Have node and node-waf installed
  * Have leptonica (~1.68) libs and headers installed
- * Have tesseract (~3.01) libs and headers installed
+ * Have tesseract (~3.01) libs and headers installed (language data has to be in /usr/local/share/tessdata/)
 
 Build
 -----
