@@ -1,7 +1,7 @@
 {
   "name" : "tesseract_native",
   "description" : "C++ module for node providing OCR with tesseract and leptonica",
-  "version" : "v0.1.0",
+  "version" : "v0.2.0",
   "scripts" : {
     "preinstall" : "node-waf configure && node-waf build",
     "preuninstall" : "rm -rf build/*"

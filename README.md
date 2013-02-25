@@ -16,7 +16,7 @@ Checkout the repository and build it yourself using
 
     node-waf configure && node-waf build
     
-or use npm (current version is 0.1.0)
+or use npm (current version is 0.2.0)
 
     npm install tesseract_native
 
