@@ -2,7 +2,7 @@ var tesseract = require('./tesseract_native');
 var myocr = new tesseract.OcrEio();
 var fs = require('fs');
 
-fs.readFile( __dirname + '/' + process.argv[2], function (err, data) {
+fs.readFile(process.argv[2], function (err, data) {
   if (err) {
     throw err; 
   }
