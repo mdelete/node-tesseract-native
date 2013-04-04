@@ -1,4 +1,4 @@
-var tesseract = require('./tesseract_native');
+var tesseract = require('./');
 var myocr = new tesseract.OcrEio();
 var fs = require('fs');
 
