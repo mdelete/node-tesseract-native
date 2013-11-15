@@ -80,7 +80,7 @@ Parameters
     
 The OCR function also accepts a config object as second and the callback as third parameter like this:
 
-    myOcr.ocr(buffer, { lang:"deu", timeout:300 }, function(result) {
+    myOcr.ocr(buffer, { lang:"deu", timeout:300 }, function(err, result) {
         // do something
     });
     
