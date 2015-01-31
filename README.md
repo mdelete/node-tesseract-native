@@ -8,7 +8,7 @@ Prerequisites
  * Have linux
  * Have node (>= 0.9.4) and node-gyp installed
  * Have leptonica (~1.68) libs and headers installed
- * Have tesseract (~3.01) libs and headers installed (language data has to be in /usr/local/share/tessdata/)
+ * Have tesseract (~3.02) libs and headers installed
 
 Build
 -----
@@ -16,7 +16,7 @@ Checkout the repository and build it yourself using
 
     node-gyp configure && node-gyp build
     
-or use npm (legacy version 0.2, does not work with node >= 0.9.4)
+or use npm
 
     npm install tesseract_native
 
@@ -30,7 +30,7 @@ Test your setup
 
 You can test your setup using the provided *test.js* script on the command-line
 
-    node test.js HelloWorld.jpg
+    $ node test.js HelloWorld.jpg
 
 Example server
 --------------
@@ -80,11 +80,11 @@ Parameters
     
 The OCR function also accepts a config object as second and the callback as third parameter like this:
 
-    myOcr.ocr(buffer, { lang:"deu", timeout:300 }, function(result) {
+    myOcr.ocr(buffer, { lang:"eng", rect:[0,0,400,400] }, function(result) {
         // do something
     });
     
-The first supported parameter is *timeout*, which is the limit in milliseconds tesseract should try to detect text in the picture, the second is *lang* which can be any three-character code for a language you have installed in tesseract (have a *.tessdata* file for).
+The first supported parameter is `tessdata`, which is the path to you Tesseract data directory (`/usr/local/share/tessdata/` by default). The second is `lang` which can be any three-character code for a language you have installed with Tesseract (`eng` by default). The third is `rect`, which is an array describing a rect of the form [`X`, `Y`, `WIDTH`, `HEIGHT`] limiting the image region for recognition. If you try the above rect with the provided test image it should land you in *hell*...
 
 Why?
 ----

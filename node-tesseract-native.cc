@@ -51,11 +51,11 @@ public:
 
   struct ocr_baton_t {
     OcrEio *oe;
-    unsigned timeout;
     int error;
-    STRING language; // this is a tesseract string
-    STRING tessdata; // this is a tesseract string
-    STRING textresult; // this is a tesseract string
+    char* language;
+    char* tessdata;
+    char* textresult;
+    int* rect;
     Persistent<Function> cb;
     Persistent<Object> buf;
     unsigned char* buf_ptr;
@@ -65,6 +65,9 @@ public:
   static Handle<Value> Ocr(const Arguments& args)
   {
     HandleScope scope;
+    char *language = NULL;
+    char *tessdata = NULL;
+    int *rect = NULL;
 
     if (args.Length() < 2 || args.Length() > 3)
     {
@@ -81,10 +84,6 @@ public:
     Handle<Object> buf = args[0]->ToObject();   
     Local<Function> cb;
     
-    STRING language("eng"); // default language, this is a tesseract string
-    STRING tessdata("/usr/local/share/tessdata/"); // default tessdata path, this is a tesseract string
-    unsigned timeout = 500; // default timeout
-
     if(args.Length() == 2)
     {
       if (!args[1]->IsFunction())
@@ -99,17 +98,11 @@ public:
     {
       if (!args[1]->IsObject())
       {
-        ThrowException(Exception::TypeError(String::New("Argument 2 must be an config object, e.g. { timeout:500, lang:\"eng\" }")));
+        ThrowException(Exception::TypeError(String::New("Argument 2 must be an config object, e.g. { lang:\"eng\" }")));
         return scope.Close(Undefined()); 
       }
 
       Handle<Object> config = args[1]->ToObject();
-      
-      Local<Value> timeout_value = config->Get(String::New("timeout"));
-      if(timeout_value->IsNumber()) 
-      {
-        timeout = timeout_value->ToInteger()->Value();
-      }
       
       Local<Value> lang_value = config->Get(String::New("lang"));
       if(lang_value->IsString())
@@ -117,7 +110,7 @@ public:
         String::AsciiValue str(lang_value);
         if(str.length() == 3)
         {
-          language = STRING(*str);
+          language = *str;
         }
       }
       
@@ -125,7 +118,29 @@ public:
       if(tessdata_value->IsString())
       {
         String::AsciiValue str(tessdata_value);
-        tessdata = STRING(*str);
+        if(str.length() < 4095)
+        {
+          tessdata = *str;
+        }
+      }
+      
+      Local<Value> box_value = config->Get(String::New("rect"));
+      if(box_value->IsArray())
+      {
+        Handle<Object> box = box_value->ToObject();
+        int length = box->Get(String::New("length"))->ToObject()->Uint32Value();
+        if(length == 4)
+        {
+          rect = new int[length];
+          for(int i = 0; i < length; i++)
+          {
+            Local<Value> element = box->Get(i);
+            if(element->IsNumber()) 
+            {
+              rect[i] = element->ToInteger()->Value();
+            }
+          }
+        }
       }
 
       if (!args[2]->IsFunction())
@@ -142,11 +157,20 @@ public:
     
     ocr_baton_t *baton = new ocr_baton_t();
     baton->oe = oe;
-    baton->timeout = timeout;
     baton->error = 0;
-    baton->textresult = "";
-    baton->language = language;
-    baton->tessdata = tessdata;
+    baton->textresult = NULL;
+    baton->rect = rect;
+    
+    if(language)
+      baton->language = language;
+    else
+      baton->language = strdup("eng");
+
+    if(tessdata)
+      baton->tessdata = tessdata;
+    else
+      baton->tessdata = strdup("/usr/local/share/tessdata/");
+      
     baton->cb = Persistent<Function>::New(cb);
     baton->buf = Persistent<Object>::New(buf);
     baton->buf_ptr = (unsigned char*) Buffer::Data(baton->buf);
@@ -164,18 +188,20 @@ public:
   {
     ocr_baton_t *baton = static_cast<ocr_baton_t *>(req->data);
     tesseract::TessBaseAPI api;
-    int r = api.Init(baton->tessdata.string(), baton->language.string(), tesseract::OEM_DEFAULT, NULL, 0, NULL, NULL, false);
-    
+    int r = api.Init(baton->tessdata, baton->language, tesseract::OEM_DEFAULT, NULL, 0, NULL, NULL, false);
     if(r == 0)
     {
-      PIX* pix = pixReadMem(baton->buf_ptr, baton->buf_len); // leptonica function
+      PIX* pix = pixReadMem(baton->buf_ptr, baton->buf_len);
       if(pix)
       {
-        if(!api.ProcessPage(pix, 0, "", NULL, baton->timeout, &baton->textresult)) // textresult will be empty string if error occured
+        api.SetImage(pix);
+        if(baton->rect)
         {
-          baton->error = 3;
+          api.SetRectangle(baton->rect[0], baton->rect[1], baton->rect[2], baton->rect[3]);
         }
-        pixDestroy(&pix); // leptonica function
+        baton->textresult = api.GetUTF8Text();
+        api.End();
+        pixDestroy(&pix);
       }
       else
       {
@@ -197,7 +223,7 @@ public:
     Local<Value> argv[2];
     
     argv[0] = Number::New(baton->error + status);
-    argv[1] = String::New(baton->textresult.string(), baton->textresult.length());
+    argv[1] = String::New(baton->textresult, strlen(baton->textresult));
 
     TryCatch try_catch;
 
@@ -205,6 +231,12 @@ public:
 
     baton->cb.Dispose();
     baton->buf.Dispose();
+
+    delete[] baton->language;
+    delete[] baton->tessdata;
+    delete[] baton->textresult;
+    if(baton->rect)
+      delete[] baton->rect;
 
     delete baton;
     delete req;
