@@ -11,7 +11,6 @@ using namespace v8;
 
 #include <leptonica/allheaders.h>
 #include <tesseract/baseapi.h>
-#include <tesseract/strngs.h>
 
 class OcrEio : ObjectWrap
 {
