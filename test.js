@@ -6,8 +6,7 @@ fs.readFile(process.argv[2], function (err, data) {
   if (err) {
     throw err; 
   }
-  console.log(require('util').inspect(data));
-  myocr.ocr(data, function(err, result){
+  myocr.ocr(data, function(err, result) {
     if(err)
       throw err;
     console.log(result);

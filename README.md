@@ -5,8 +5,8 @@ C++ module for node providing OCR with tesseract and leptonica
 
 Prerequisites
 -------------
- * Have linux
- * Have node (>= 0.9.4) and node-gyp installed
+ * Have linux or OSX (at least these are tested OSes)
+ * Have node (>= 0.12.0) and node-gyp installed
  * Have leptonica (~1.68) libs and headers installed
  * Have tesseract (~3.02) libs and headers installed
 
