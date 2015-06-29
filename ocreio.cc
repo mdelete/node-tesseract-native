@@ -31,6 +31,7 @@ Persistent<Function> OcrEio::constructor;
 void OcrEio::Init(Handle<Object> exports)
 {
   Isolate* isolate = Isolate::GetCurrent(); // fixme, see: https://strongloop.com/strongblog/node-js-v0-12-c-apis-breaking/
+                                            // exports->GetIsolate() as stated in https://iojs.org/api/addons.html does not work
 
   Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
   tpl->SetClassName(String::NewFromUtf8(isolate, "OcrEio"));
