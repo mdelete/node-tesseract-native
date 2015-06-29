@@ -5,8 +5,8 @@ C++ module for node providing OCR with tesseract and leptonica
 
 Prerequisites
 -------------
- * Have linux
- * Have node (>= 0.9.4 < 0.12.0) and node-gyp installed
+ * Have linux or OSX (these builds are tested)
+ * Have node and node-gyp installed
  * Have leptonica (~1.68) libs and headers installed
  * Have tesseract (~3.02) libs and headers installed
 
@@ -14,11 +14,15 @@ Build
 -----
 Checkout the repository and build it yourself using
 
-    node-gyp configure && node-gyp build
+    node-gyp configure && node-gyp build [be aware: master branch is for node (>= 0.9.4 < 0.12.0), for node (>= 0.12.0) checkout `node12` branch]
     
 or use npm
 
     npm install tesseract_native
+
+or
+
+    npm install tesseract_native@0.4.1   [if node (>= 0.9.4 < 0.12.0)]
 
 Supported Picture Formats
 -------------------------
