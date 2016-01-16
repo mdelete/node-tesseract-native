@@ -82,7 +82,10 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
     return;
   }
   
-  if (!args[0]->ToObject()->GetConstructorName()->Equals(String::NewFromUtf8(isolate, "Buffer", String::kInternalizedString)))
+  // Add "Uint8Array" check to make it compatible with Node 4.2.1
+  //if (!args[0]->ToObject()->GetConstructorName()->Equals(String::NewFromUtf8(isolate, "Buffer", String::kInternalizedString)))
+  if ((!args[0]->ToObject()->GetConstructorName()->Equals(String::NewFromUtf8(isolate, "Buffer", String::kInternalizedString))) &&
+  (!args[0]->ToObject()->GetConstructorName()->Equals(String::NewFromUtf8(isolate, "Uint8Array", String::kInternalizedString))))
   {
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 1 must be an object of type Buffer", String::kInternalizedString)));
     scope.Escape(result);
@@ -236,7 +239,8 @@ void OcrEio::EIO_AfterOcr(uv_work_t *req, int status)
   Local<Value> argv[2];
   
   Isolate* isolate = Isolate::GetCurrent(); // fixme, see: https://strongloop.com/strongblog/node-js-v0-12-c-apis-breaking/
-
+  // Add below line to fix error "Cannot create a handle without a HandleScope"
+  HandleScope scope(isolate);
   argv[0] = Number::New(isolate, baton->error + status);
   argv[1] = String::NewFromUtf8(isolate, baton->textresult, String::kInternalizedString, strlen(baton->textresult));
 
