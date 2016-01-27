@@ -45,6 +45,7 @@ class OcrEio : public node::ObjectWrap {
     OcrEio *oe;
     int error;
     char* language;
+    int psm;
     char* tessdata;
     char* textresult;
     int* rect;
