@@ -72,7 +72,7 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
   Local<Value> result; // default undefined
   
   char *language = NULL;
-  int psm = -1;
+  int psm = 3; // default value
   char *tessdata = NULL;
   int *rect = NULL;
   
@@ -214,13 +214,11 @@ void OcrEio::EIO_Ocr(uv_work_t *req)
   int r = api.Init(baton->tessdata, baton->language, tesseract::OEM_DEFAULT, NULL, 0, NULL, NULL, false);
   if(r == 0)
   {
-    if (baton->psm != -1) {
-      api.SetPageSegMode((tesseract::PageSegMode)baton->psm);
-    }
     PIX* pix = pixReadMem(baton->buf_ptr, baton->buf_len);
     if(pix)
     {
 	  api.SetImage(pix);
+      api.SetPageSegMode((tesseract::PageSegMode)baton->psm);
 	  if(baton->rect)
 	  {
 	    api.SetRectangle(baton->rect[0], baton->rect[1], baton->rect[2], baton->rect[3]);
@@ -266,6 +264,6 @@ void OcrEio::EIO_AfterOcr(uv_work_t *req, int status)
 
   if (try_catch.HasCaught())
   {
-    node::FatalException(try_catch);
+    node::FatalException(isolate, try_catch);
   }
 }
