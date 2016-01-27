@@ -85,6 +85,22 @@ The OCR function also accepts a config object as second and the callback as thir
     });
     
 The first supported parameter is `tessdata`, which is the path to you Tesseract data directory (`/usr/local/share/tessdata/` by default). The second is `lang` which can be any three-character code for a language you have installed with Tesseract (`eng` by default). The third is `rect`, which is an array describing a rect of the form [`X`, `Y`, `WIDTH`, `HEIGHT`] limiting the image region for recognition. If you try the above rect with the provided test image it should land you in *hell*...
+Another parameter `psm` which takes an Integer from `0` to `10` configuring the page segmentation mode as in the table below. The default mode is `3`.
+
+Value |
+------------
+0 | Orientation and script detection (OSD) only.
+1 | Automatic page segmentation with OSD.
+2 | Automatic page segmentation, but no OSD, or OCR.
+3 | Fully automatic page segmentation, but no OSD. (Default)
+4 | Assume a single column of text of variable sizes.
+5 | Assume a single uniform block of vertically aligned text.
+6 | Assume a single uniform block of text.
+7 | Treat the image as a single text line.
+8 | Treat the image as a single word.
+9 | Treat the image as a single word in a circle.
+10 | Treat the image as a single character.
+
 
 Why?
 ----
