@@ -98,9 +98,9 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
   {
     if (!args[1]->IsFunction())
     {
-  	  isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 2 must be a function", String::kInternalizedString)));
-  	  scope.Escape(result);
-  	  return; 
+      isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 2 must be a function", String::kInternalizedString)));
+      scope.Escape(result);
+      return; 
     }
   
     cb = Local<Function>::Cast(args[1]);
@@ -109,9 +109,9 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
   {
     if (!args[1]->IsObject())
     {
-  	  isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 2 must be an config object, e.g. { lang:\"eng\" }", String::kInternalizedString)));
-  	  scope.Escape(result);
-  	  return; 
+      isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 2 must be an config object, e.g. { lang:\"eng\" }", String::kInternalizedString)));
+      scope.Escape(result);
+      return; 
     }
   
     Handle<Object> config = args[1]->ToObject();
@@ -119,28 +119,28 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
     Local<Value> lang_value = config->Get(String::NewFromUtf8(isolate, "lang", String::kInternalizedString));
     if (lang_value->IsString())
     {
-  	  String::Utf8Value str(lang_value);
-  	  if(str.length() == 3)
-  	  {
-  	    language = *str;
-  	  }
+      String::Utf8Value str(lang_value);
+      if(str.length() == 3)
+      {
+        language = *str;
+      }
     }
     
     Local<Value> psm_value = config->Get(String::NewFromUtf8(isolate, "psm", String::kInternalizedString));
     if (psm_value->IsNumber())
     {
-  	  psm = psm_value->ToInteger()->Value();
+      psm = psm_value->ToInteger()->Value();
     }
   
     Local<Value> tessdata_value = config->Get(String::NewFromUtf8(isolate, "tessdata", String::kInternalizedString));
     
     if (tessdata_value->IsString())
     {
-  	  String::Utf8Value str(tessdata_value);
-  	  if(str.length() < 4095)
-  	  {
-  	    tessdata = *str;
-  	  }
+      String::Utf8Value str(tessdata_value);
+      if(str.length() < 4095)
+      {
+        tessdata = *str;
+      }
     }
   
     Local<Value> box_value = config->Get(String::NewFromUtf8(isolate, "rect", String::kInternalizedString));
@@ -165,9 +165,9 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
   
     if (!args[2]->IsFunction())
     {
-  	  isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 3 must be a function", String::kInternalizedString)));
-  	  scope.Escape(result);
-  	  return; 
+      isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Argument 3 must be a function", String::kInternalizedString)));
+      scope.Escape(result);
+      return; 
     }
   
     cb = Local<Function>::Cast(args[2]);
@@ -181,13 +181,12 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
   baton->error = 0;
   baton->textresult = NULL;
   baton->rect = rect;
+  baton->psm = psm;
     
   if(language)
     baton->language = language;
   else
     baton->language = strdup("eng");
-    
-  baton->psm = psm;
 
   if(tessdata)
     baton->tessdata = tessdata;
@@ -217,19 +216,19 @@ void OcrEio::EIO_Ocr(uv_work_t *req)
     PIX* pix = pixReadMem(baton->buf_ptr, baton->buf_len);
     if(pix)
     {
-	  api.SetImage(pix);
+      api.SetImage(pix);
       api.SetPageSegMode((tesseract::PageSegMode)baton->psm);
-	  if(baton->rect)
-	  {
-	    api.SetRectangle(baton->rect[0], baton->rect[1], baton->rect[2], baton->rect[3]);
-	  }
-	  baton->textresult = api.GetUTF8Text();
-	  api.End();
-	  pixDestroy(&pix);
+      if(baton->rect)
+      {
+        api.SetRectangle(baton->rect[0], baton->rect[1], baton->rect[2], baton->rect[3]);
+      }
+      baton->textresult = api.GetUTF8Text();
+      api.End();
+      pixDestroy(&pix);
     }
     else
     {
-	  baton->error = 2;
+      baton->error = 2;
     }
   }
   else
