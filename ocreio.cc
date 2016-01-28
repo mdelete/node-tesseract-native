@@ -229,6 +229,7 @@ void OcrEio::EIO_Ocr(uv_work_t *req)
     else
     {
       baton->error = 2;
+      api.End();
     }
   }
   else
