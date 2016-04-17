@@ -1,7 +1,7 @@
 {
   "targets": [{
     "target_name": "tesseract_native",
-    "sources": [ "node-tesseract-native.cc" ],
+    "sources": [ "addon.cc", "ocreio.cc" ],
     "include_dirs": [
       "/usr/local/include",
     ],
@@ -10,6 +10,12 @@
     ],
     "link_settings": {
       "libraries": [ "-llept", "-ltesseract" ]
+    },
+    "configurations": {
+      "Release": {
+        "cflags": [ "-Wno-ignored-qualifiers" ],
+        "xcode_settings": { "OTHER_CFLAGS": [ "-Wno-ignored-qualifiers" ] }
+      }
     }
   }]
 }

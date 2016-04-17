@@ -1,10 +1,11 @@
 {
   "name" : "tesseract_native",
   "description" : "C++ module for node providing OCR with tesseract and leptonica",
-  "version" : "v0.4.1",
+  "version" : "v0.5.2",
   "scripts" : {
     "preinstall" : "node-gyp configure && node-gyp build",
-    "preuninstall" : "rm -rf build/*"
+    "preuninstall" : "rm -rf build/*",
+    "test": "node test.js HelloWorld.jpg"
   },
   "main" : "build/Release/tesseract_native.node",
   "homepage" : "https://github.com/mdelete/node-tesseract-native",
@@ -22,6 +23,6 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.9.7 <0.12"
+    "node": ">=0.12.0"
   }
 }
