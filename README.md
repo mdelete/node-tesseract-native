@@ -14,7 +14,7 @@ Build
 -----
 Checkout the repository and build it yourself using
 
-    node-gyp configure && node-gyp build [be aware: master branch is for node (>= 0.9.4 < 0.12.0), for node (>= 0.12.0) checkout `node12` branch]
+    node-gyp configure && node-gyp build
     
 or use npm
 
@@ -22,7 +22,7 @@ or use npm
 
 or
 
-    npm install tesseract_native@0.4.1   [if node (>= 0.9.4 < 0.12.0)]
+    npm install tesseract_native@0.4.1 for nodejs >= 0.9.4 < 0.12.0
 
 Supported Picture Formats
 -------------------------
