@@ -6,19 +6,19 @@ C++ module for node providing OCR with tesseract and leptonica
 Prerequisites
 -------------
  * Have linux or OSX (at least these are tested OSes)
- * Have node (>= 0.12.0) and node-gyp installed
+ * Have node and node-gyp installed
  * Have leptonica (~1.68) libs and headers installed
  * Have tesseract (~3.02) libs and headers installed
 
 Build
 -----
-Checkout the repository and build it yourself using
+Checkout the repository and build it yourself using (you will also need this for the *node10* branch)
 
     node-gyp configure && node-gyp build
-    
+
 or use npm
 
-    npm install tesseract_native
+    npm install tesseract_native for nodejs > 0.12.0 <= 8.x.y 
 
 or
 
@@ -27,7 +27,7 @@ or
 Supported Picture Formats
 -------------------------
 
-The module can handle every picture format leptonica can handle (see there), but as this module is likely to be used in an online service, pictures should be as small as possible. A 1.3 MegaPixel picture converted to B/W using adaptive threshold filtering, saved as PNG will be 50KB on average. This is were you want to go.
+The module can handle every picture format leptonica can handle (see there), but as this module is likely to be used in an online service, pictures should be as small as possible. A 1.3 Megapixel picture converted to B/W using adaptive threshold filtering, saved as PNG will be 50KB on average. This is were you want to go.
 
 Test your setup
 ---------------
