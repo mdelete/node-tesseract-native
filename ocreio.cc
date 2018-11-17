@@ -49,6 +49,7 @@ void OcrEio::New(const FunctionCallbackInfo<Value>& args)
 {
   Isolate* isolate = args.GetIsolate();
   HandleScope scope(isolate);
+  Local<Context> ctx = Context::New(isolate);
 
   if (args.IsConstructCall())
   {
@@ -61,7 +62,7 @@ void OcrEio::New(const FunctionCallbackInfo<Value>& args)
     const int argc = 0;
     Local<Value> argv[argc] = {};
     Local<Function> cons = Local<Function>::New(isolate, constructor);
-    args.GetReturnValue().Set(cons->NewInstance(argc, argv));
+    args.GetReturnValue().Set(cons->NewInstance(ctx, argc, argv).ToLocalChecked());
   }
 }
 
@@ -119,7 +120,7 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
     Local<Value> lang_value = config->Get(String::NewFromUtf8(isolate, "lang", String::kInternalizedString));
     if (lang_value->IsString())
     {
-      String::Utf8Value str(lang_value);
+      String::Utf8Value str(isolate, lang_value);
       if(str.length() == 3)
       {
         language = *str;
@@ -136,7 +137,7 @@ void OcrEio::Ocr(const FunctionCallbackInfo<Value>& args)
     
     if (tessdata_value->IsString())
     {
-      String::Utf8Value str(tessdata_value);
+      String::Utf8Value str(isolate, tessdata_value);
       if(str.length() < 4095)
       {
         tessdata = *str;
@@ -253,7 +254,7 @@ void OcrEio::EIO_AfterOcr(uv_work_t *req, int status)
   argv[0] = Number::New(isolate, baton->error + status);
   argv[1] = String::NewFromUtf8(isolate, baton->textresult, String::kInternalizedString, strlen(baton->textresult));
 
-  TryCatch try_catch;
+  TryCatch try_catch(isolate);
 
   Handle<Context> context = isolate->GetCurrentContext();
   Handle<Function> callback = Local<Function>::New(isolate, baton->cb);
